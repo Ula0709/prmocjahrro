@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caja en Linea</title>
+    <title>Caja en Línea</title>
     <style>
         body {
             margin: 0;
@@ -16,71 +16,51 @@
         }
 
         .rectangle {
-            width: 599px;
-            height: 210px;
+            width: 90%; /* Ancho del contenedor en porcentaje */
+            max-width: 350px; /* Ancho máximo para el contenedor */
+            border-radius: 15px; /* Bordes redondeados */
             position: relative;
-            margin-top: 188px;
+            margin-top: 100px; /* Ajusta la posición vertical */
             overflow: hidden;
-        }
-
-        .rectangle::after {
-            content: '';
-            position: absolute;
-            top: 117px;
-            left: 0;
-            right: 0;
-            height: 93px;
-            background-color: #D3D1D2;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+            background-color: #D3D1D2; /* Color de fondo del contenedor */
         }
 
         .degradado {
-            height: 117px;
+            height: 90px; /* Ajusta la altura del degradado */
             background: linear-gradient(to left, #072658, #063150, #0E6E80);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            border-radius: 15px 15px 0 0; /* Bordes redondeados en la parte superior */
+            position: relative; /* Cambiado a relative para el contenido */
+            z-index: 1; /* Asegúrate de que esté por encima del fondo */
         }
 
         .imagen-logo {
-            width: 380px; /* Ajusta el tamaño del logo */
+            width: 80%; /* Ajusta el tamaño del logo */
+            max-width: 200px; /* Ancho máximo del logo */
             height: auto;
-            margin-bottom: 8px;
-            margin-left: -17px; /* Mueve el logo 5px a la izquierda */
+            margin-bottom: 5px;
         }
 
         .texto {
             font-family: "Neo Sans Std", sans-serif; /* Cambia a tu fuente deseada */
-            font-size: 24px; /* Tamaño de fuente */
-            line-height: 36px; /* Espaciado */
+            font-size: 20px; /* Tamaño de fuente */
+            line-height: 30px; /* Espaciado */
             color: white;
             text-transform: uppercase;
             text-align: center; /* Centra el texto */
             font-weight: 400; /* Peso de la fuente */
-            letter-spacing: normal; /* Espaciado de letras */
-            word-spacing: 0px; /* Espaciado de palabras */
-        }
-
-        .imagen {
-            margin-top: 14px;
-            width: 220px;
-            height: 340px;
         }
 
         .boton {
-            width: 265px;
-            height: 38px;
+            width: 80%; /* Ancho del botón en porcentaje */
+            max-width: 250px; /* Ancho máximo del botón */
+            height: 40px; /* Altura del botón */
             background-color: #083575;
-            margin: 0 15px;
+            margin: 10px 0; /* Margen vertical entre botones */
             border: none;
             color: white;
             cursor: pointer;
@@ -88,21 +68,29 @@
             align-items: center;
             justify-content: center;
             font-family: "Neo Sans Std", sans-serif; /* Cambia a tu fuente deseada */
-            font-size: 18px; /* Tamaño de fuente */
-            line-height: 36px; /* Espaciado */
+            font-size: 16px; /* Tamaño de fuente */
             font-weight: 400; /* Peso de la fuente */
-            letter-spacing: normal; /* Espaciado de letras */
-            word-spacing: 0px; /* Espaciado de palabras */
+            border-radius: 5px; /* Bordes redondeados para los botones */
+            transition: background-color 0.3s; /* Transición para el hover */
+        }
+
+        .boton:hover {
+            background-color: #0B4A8E; /* Color de fondo del botón en hover */
         }
 
         .botones {
-            position: absolute;
-            top: 140px;
-            left: 0;
-            right: 0;
             display: flex;
-            justify-content: center;
-            z-index: 2;
+            flex-direction: column; /* Alinea los botones en columna */
+            align-items: center; /* Centra los botones */
+            margin-top: 10px; /* Margen superior para los botones */
+            z-index: 2; /* Asegúrate de que estén por encima del fondo */
+        }
+
+        .imagen {
+            margin-top: 20px; /* Margen superior */
+            width: 60%; /* Ajuste para la imagen */
+            max-width: 220px; /* Ancho máximo */
+            height: auto; /* Altura automática */
         }
     </style>
 </head>
